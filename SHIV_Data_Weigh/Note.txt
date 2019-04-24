@@ -1,0 +1,22 @@
+﻿Cập nhật 23/03:
+- Báo lỗi kết nối cổng COM
+
+Cập nhật 16/04:
+- Gửi dữ liệu các lần đo lực ra ô Excel
++ Cài đặt ngưỡng gửi giá trị
++ Đạt ngưỡng => tự động gửi qua bàn phím
++ Tạo hàm gửi qua bàn phím convert dữ liệu
+
+- Tùy chọn 2 súng lực
++ Lựa chọn ngưỡng
++ Gửi tín hiệu khóa súng lực
+
+- Tùy chọn mở súng lực
+
+
+"80001090100111120001501300017014000160150001441600000170003018000151900015202019-04-16:11:19:09212019-03-04:15:17:0222023       845"
+
+1.51	1.62	
+
+Xử lý NG
+

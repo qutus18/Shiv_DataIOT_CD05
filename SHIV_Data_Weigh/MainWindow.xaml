@@ -1,0 +1,56 @@
+﻿<Window x:Class="SHIV_Data_Weigh.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SHIV_Data_Weigh"
+        mc:Ignorable="d"
+        Title="Demo - Lấy dữ liệu cân" Height="630" Width="450" WindowStartupLocation="CenterScreen" Closing="Window_Closing" Icon="cong_ty_co_phan_rtc_technology_viet_nam_596ed00091776_Cu1_icon.ico">
+    <Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="25"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+		<DockPanel Grid.Row="0" VerticalAlignment="Center">
+			<Menu FontSize="13.5" Background="White" DockPanel.Dock="Top" VerticalContentAlignment="Center" VerticalAlignment="Center">
+				<MenuItem Background="White" Header="File">
+					<MenuItem Background="White" Header="Exit"/>
+				</MenuItem>
+				<MenuItem Background="White" Header="Settings">
+					<MenuItem Background="White" Header="Excel Settings"/>
+				</MenuItem>
+				<MenuItem Background="White" Header="About"/>
+			</Menu>
+		</DockPanel>
+		<Grid Grid.Row="1" Background="White">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="2*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="2.5*"/>
+            </Grid.RowDefinitions>
+			<Grid Grid.Row="0" Background="#FFEDFFF8">
+				<!--<Label Content="0.000" FontSize="80" FontWeight="DemiBold" Foreground="Green" HorizontalAlignment="Right" VerticalAlignment="Center" VerticalContentAlignment="Center"/>-->
+				<TextBlock Name="lblWeighTakeOut" MouseDown="LblWeighRead_MouseDown" Text="{Binding Path=Weigh, StringFormat='{}{0:N1}'}" FontSize="135" Margin="0,0,10,5" FontWeight="DemiBold" Foreground="LightSeaGreen" TextAlignment="Right" VerticalAlignment="Center" FontFamily="Segoe UI Semibold"/>
+			</Grid> 
+			<Grid Grid.Row="1" Background="#FFFFFCF9">
+				<TextBlock Name="lblWeighRead" Text="{Binding Path=Weigh, StringFormat='{}{0:N1}'}" FontSize="75" Margin="0,0,13,10" FontWeight="DemiBold" Foreground="LightCoral" TextAlignment="Right" VerticalAlignment="Center" FontFamily="Segoe UI Semibold"/>
+			</Grid>
+            <Grid Grid.Row="2" Background="#FFFFFCF9">
+                <ListView Margin="10" Name="lvDataBinding" ItemsSource="{Binding}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <WrapPanel>
+                                <TextBlock Text="Lần bắn: " />
+                                <TextBlock Text="{Binding Header}" FontWeight="Bold" />
+                                <TextBlock Text=", " />
+                                <TextBlock Text="Giá trị lực: " />
+                                <TextBlock Text="{Binding Value}" FontWeight="Bold" />
+                                <TextBlock Text=")" />
+                            </WrapPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
+		</Grid>
+    </Grid>
+</Window>

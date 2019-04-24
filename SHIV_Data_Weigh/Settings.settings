@@ -1,0 +1,30 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="SHIV_Data_Weigh" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ComPort" Type="System.String" Scope="User">
+      <Value Profile="(Default)">COM5</Value>
+    </Setting>
+    <Setting Name="TouqueIP_001" Type="System.String" Scope="User">
+      <Value Profile="(Default)">192.168.5.158</Value>
+    </Setting>
+    <Setting Name="TouqueIP_002" Type="System.String" Scope="User">
+      <Value Profile="(Default)">192.168.5.159</Value>
+    </Setting>
+    <Setting Name="TouquePort_001" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">4545</Value>
+    </Setting>
+    <Setting Name="TouquePort_002" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">4545</Value>
+    </Setting>
+    <Setting Name="TouqueSelect" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="TouqueStartCollect" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="TouqueEnd" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">3</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

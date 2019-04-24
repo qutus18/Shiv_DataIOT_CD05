@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.136
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SHIV_Data_Weigh_Touque", "SHIV_Data_Weigh\SHIV_Data_Weigh_Touque.csproj", "{5641B832-BE20-4076-BB07-EF12DFD9D8A2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5641B832-BE20-4076-BB07-EF12DFD9D8A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5641B832-BE20-4076-BB07-EF12DFD9D8A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5641B832-BE20-4076-BB07-EF12DFD9D8A2}.Debug|x64.ActiveCfg = Debug|x64
+		{5641B832-BE20-4076-BB07-EF12DFD9D8A2}.Debug|x64.Build.0 = Debug|x64
+		{5641B832-BE20-4076-BB07-EF12DFD9D8A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5641B832-BE20-4076-BB07-EF12DFD9D8A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5641B832-BE20-4076-BB07-EF12DFD9D8A2}.Release|x64.ActiveCfg = Release|x64
+		{5641B832-BE20-4076-BB07-EF12DFD9D8A2}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5025143E-29A6-46D6-8E8E-3A17E09FA3B2}
+	EndGlobalSection
+EndGlobal
