@@ -17,6 +17,7 @@ namespace SHIV_Data_Weigh
     {
         private BalanceObj Balance;
         private TouqueManager Touques;
+        private SylvacComObj Sylvac;
 
         public MainWindow()
         {
@@ -62,22 +63,41 @@ namespace SHIV_Data_Weigh
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            try
+            {
+                Sylvac.Close();
+            }
+            catch
+            { }
         }
 
         private void DataInitial()
         {
-            // Khai báo thiết bị cân mỡ
-            string tempStringCOM = Settings.Default.ComPort;
-            Balance = new BalanceObj(tempStringCOM, 15, 100);
-            Balance.BalanceChangeValueEvent += ProcessBalanceValueReturn;
-            // Hiển thị đối tượng cân mỡ
-            lblWeighRead.DataContext = Balance.LbdWeighRead;
-            lblWeighTakeOut.DataContext = Balance.LbdWeighTakeOut;
-            // Khai báo thiết bị súng lực 
-            Touques = new TouqueManager();
-            Touques.EventReceiveDataComplete += ProcessTouquesListData;
-            lvDataBinding.DataContext = Touques.ListDataTouque;
-            // Khởi tạo Data hiển thị List
+            //// Khai báo thiết bị cân mỡ
+            //string tempStringCOM = Settings.Default.ComPort;
+            //Balance = new BalanceObj(tempStringCOM, 15, 100);
+            //Balance.BalanceChangeValueEvent += ProcessBalanceValueReturn;
+            //// Hiển thị đối tượng cân mỡ
+            //lblWeighRead.DataContext = Balance.LbdWeighRead;
+            //lblWeighTakeOut.DataContext = Balance.LbdWeighTakeOut;
+            //// Khai báo thiết bị súng lực 
+            //Touques = new TouqueManager();
+            //Touques.EventReceiveDataComplete += ProcessTouquesListData;
+            //lvDataBinding.DataContext = Touques.ListDataTouque;
+            // Khai báo thiết bị Sylvac
+            Sylvac = new SylvacComObj("COM5");
+            lblSylvacInput.DataContext = Sylvac.lbdCurrentValue;
+            lblSylvacFinal.DataContext = Sylvac.lbdFinalValue;
+            //Sylvac.SylvacChangeValueEvent += ProcessSylvacEvent;
+        }
+
+        private async void ProcessSylvacEvent(float Value)
+        {
+            System.Windows.Clipboard.Clear();  // Always clear the clipboard first
+            string stringWrite = Value.ToString("#.##");
+            System.Windows.Clipboard.SetText(stringWrite);
+            await Task.Delay(100);
+            System.Windows.Forms.SendKeys.SendWait("^v");
         }
 
         private void ProcessBalanceValueReturn(float Value)
@@ -93,5 +113,30 @@ namespace SHIV_Data_Weigh
             }));
             //MessageBox.Show("Hoàn thành bắn lực!");
         }
+
+        private void CommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void CommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            switch ((e.Command as RoutedUICommand).Name)
+            {
+                case "Exit":
+                    this.Close();
+                    break;
+                case "StartSylvac":
+                    Sylvac.Start();
+                    break;
+                case "StopSylvac":
+                    Sylvac.Stop();
+                    break;
+                default:
+                    break;
+            }
+        }
     }
+
+    
 }

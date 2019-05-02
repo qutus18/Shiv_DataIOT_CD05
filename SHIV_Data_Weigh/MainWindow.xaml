@@ -3,32 +3,40 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:SHIV_Data_Weigh"
         mc:Ignorable="d"
+        xmlns:local="clr-namespace:SHIV_Data_Weigh"
+        xmlns:w="clr-namespace:SHIV_Data_Weigh.Commands"
         Title="Demo - Lấy dữ liệu cân" Height="630" Width="850" WindowStartupLocation="CenterScreen" Closing="Window_Closing" Icon="cong_ty_co_phan_rtc_technology_viet_nam_596ed00091776_Cu1_icon.ico">
+    <Window.CommandBindings>
+        <CommandBinding Command="w:CustomCommands.Exit" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
+        <CommandBinding Command="w:CustomCommands.StartSylvac" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
+        <CommandBinding Command="w:CustomCommands.StopSylvac" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
+    </Window.CommandBindings>
     <Grid>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="25"/>
-			<RowDefinition Height="*"/>
-		</Grid.RowDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-		<DockPanel Grid.Row="0" Grid.ColumnSpan="2" VerticalAlignment="Center">
-			<Menu FontSize="13.5" Background="White" DockPanel.Dock="Top" VerticalContentAlignment="Center" VerticalAlignment="Center">
-				<MenuItem Background="White" Header="File">
-					<MenuItem Background="White" Header="Exit"/>
-				</MenuItem>
-				<MenuItem Background="White" Header="Settings">
-					<MenuItem Background="White" Header="Excel Settings"/>
-				</MenuItem>
-				<MenuItem Background="White" Header="About"/>
-			</Menu>
-		</DockPanel>
-		<Grid Grid.Row="1" Grid.ColumnSpan="2" Background="White">
-			<Grid.RowDefinitions>
-				<RowDefinition Height="2*"/>
+        <DockPanel Grid.Row="0" Grid.ColumnSpan="2" VerticalAlignment="Center">
+            <Menu FontSize="13.5" Background="White" DockPanel.Dock="Top" VerticalContentAlignment="Center" VerticalAlignment="Center">
+                <MenuItem Background="White" Header="File">
+                    <MenuItem Background="White" Command="w:CustomCommands.Exit"/>
+                    <MenuItem Background="White" Command="w:CustomCommands.StartSylvac"/>
+                    <MenuItem Background="White" Command="w:CustomCommands.StopSylvac"/>
+                </MenuItem>
+                <MenuItem Background="White" Header="Settings">
+                    <MenuItem Background="White" Header="Excel Settings"/>
+                </MenuItem>
+                <MenuItem Background="White" Header="About"/>
+            </Menu>
+        </DockPanel>
+        <Grid Grid.Row="1" Grid.ColumnSpan="2" Background="White">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*"/>
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="2.5*"/>
             </Grid.RowDefinitions>
@@ -36,19 +44,19 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-			<Grid Grid.Row="0" Background="#FFEDFFF8">
-				<!--<Label Content="0.000" FontSize="80" FontWeight="DemiBold" Foreground="Green" HorizontalAlignment="Right" VerticalAlignment="Center" VerticalContentAlignment="Center"/>-->
-				<TextBlock Name="lblWeighTakeOut" MouseDown="LblWeighRead_MouseDown" Text="{Binding Path=Weigh, StringFormat='{}{0:N1}'}" FontSize="135" Margin="0,0,10,5" FontWeight="DemiBold" Foreground="LightSeaGreen" TextAlignment="Right" VerticalAlignment="Center" FontFamily="Segoe UI Semibold"/>
-			</Grid> 
-			<Grid Grid.Row="1" Background="#FFFFFCF9">
-				<TextBlock Name="lblWeighRead" Text="{Binding Path=Weigh, StringFormat='{}{0:N1}'}" FontSize="75" Margin="0,0,13,10" FontWeight="DemiBold" Foreground="LightCoral" TextAlignment="Right" VerticalAlignment="Center" FontFamily="Segoe UI Semibold"/>
-			</Grid>
+            <Grid Grid.Row="0" Background="#FFEDFFF8">
+                <!--<Label Content="0.000" FontSize="80" FontWeight="DemiBold" Foreground="Green" HorizontalAlignment="Right" VerticalAlignment="Center" VerticalContentAlignment="Center"/>-->
+                <TextBlock Name="lblWeighTakeOut" MouseDown="LblWeighRead_MouseDown" Text="{Binding Path=Weigh, StringFormat='{}{0:N1}'}" FontSize="135" Margin="0,0,10,5" FontWeight="DemiBold" Foreground="LightSeaGreen" TextAlignment="Right" VerticalAlignment="Center" FontFamily="Segoe UI Semibold"/>
+            </Grid>
+            <Grid Grid.Row="1" Background="#FFFFFCF9">
+                <TextBlock Name="lblWeighRead" Text="{Binding Path=Weigh, StringFormat='{}{0:N1}'}" FontSize="75" Margin="0,0,13,10" FontWeight="DemiBold" Foreground="LightCoral" TextAlignment="Right" VerticalAlignment="Center" FontFamily="Segoe UI Semibold"/>
+            </Grid>
             <Grid Grid.Row="0" Grid.Column="2" Background="#FFFFFCF9">
                 <!--<Label Content="0.000" FontSize="80" FontWeight="DemiBold" Foreground="Green" HorizontalAlignment="Right" VerticalAlignment="Center" VerticalContentAlignment="Center"/>-->
-                <TextBlock Name="lblSylvacInput" MouseDown="LblWeighRead_MouseDown" Text="{Binding Path=Weigh, StringFormat='{}{0:N1}'}" FontSize="135" Margin="0,0,10,5" FontWeight="DemiBold" Foreground="LightSeaGreen" TextAlignment="Right" VerticalAlignment="Center" FontFamily="Segoe UI Semibold"/>
+                <TextBlock Name="lblSylvacInput" Text="{Binding Path=FloatValue, StringFormat='{}{0:N3}'}" FontSize="135" Margin="0,0,10,5" FontWeight="DemiBold" Foreground="LightSeaGreen" TextAlignment="Right" VerticalAlignment="Center" FontFamily="Segoe UI Semibold"/>
             </Grid>
             <Grid Grid.Row="1" Grid.Column="2" Background="#FFEDFFF8">
-                <TextBlock Name="lblSylvacFinal" Text="{Binding Path=Weigh, StringFormat='{}{0:N1}'}" FontSize="75" Margin="0,0,13,10" FontWeight="DemiBold" Foreground="LightCoral" TextAlignment="Right" VerticalAlignment="Center" FontFamily="Segoe UI Semibold"/>
+                <TextBlock Name="lblSylvacFinal" Text="{Binding Path=FloatValue, StringFormat='{}{0:N3}'}" FontSize="75" Margin="0,0,13,10" FontWeight="DemiBold" Foreground="LightCoral" TextAlignment="Right" VerticalAlignment="Center" FontFamily="Segoe UI Semibold"/>
             </Grid>
             <Grid Grid.Row="2" Grid.ColumnSpan="2" Background="#FFFFFCF9">
                 <ListView Margin="10" Name="lvDataBinding" ItemsSource="{Binding}">
@@ -66,6 +74,6 @@
                     </ListView.ItemTemplate>
                 </ListView>
             </Grid>
-		</Grid>
+        </Grid>
     </Grid>
 </Window>
