@@ -3,13 +3,13 @@
   <Profiles />
   <Settings>
     <Setting Name="ComPort" Type="System.String" Scope="User">
-      <Value Profile="(Default)">COM5</Value>
+      <Value Profile="(Default)">COM10</Value>
     </Setting>
     <Setting Name="TouqueIP_001" Type="System.String" Scope="User">
-      <Value Profile="(Default)">192.168.5.158</Value>
+      <Value Profile="(Default)">127.0.0.1</Value>
     </Setting>
     <Setting Name="TouqueIP_002" Type="System.String" Scope="User">
-      <Value Profile="(Default)">192.168.5.159</Value>
+      <Value Profile="(Default)">192.168.5.158</Value>
     </Setting>
     <Setting Name="TouquePort_001" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">4545</Value>
@@ -18,13 +18,28 @@
       <Value Profile="(Default)">4545</Value>
     </Setting>
     <Setting Name="TouqueSelect" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">2</Value>
+      <Value Profile="(Default)">1</Value>
     </Setting>
     <Setting Name="TouqueStartCollect" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">2</Value>
     </Setting>
     <Setting Name="TouqueEnd" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">3</Value>
+    </Setting>
+    <Setting Name="ComSylvac" Type="System.String" Scope="User">
+      <Value Profile="(Default)">COM12</Value>
+    </Setting>
+    <Setting Name="UseBalance" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="UseTouque" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="UseSylvac" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="USR424IP" Type="System.String" Scope="User">
+      <Value Profile="(Default)">192.168.10.1</Value>
     </Setting>
   </Settings>
 </SettingsFile>

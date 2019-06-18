@@ -27,8 +27,17 @@ namespace SHIV_Data_Weigh
             // Khởi tạo cổng COM
             COMSylvac = new SerialPort(COMPort, 4800, Parity.Even, 7, StopBits.Two);
             COMSylvac.DataReceived += COMReceiveProcess;
-            COMSylvac.Open();
-            WriteDefault();
+			try
+			{
+				COMSylvac.Open();
+			}
+			catch (Exception e)
+			{
+				System.Windows.MessageBox.Show($"Lỗi kết nối cổng COM {COMPort} - Mã lỗi: {e.ToString().Substring(0, 50)}");
+				App.Current.Shutdown();
+			}
+
+			WriteDefault();
             // Khởi tạo dữ liệu đọc
             inputFloatSum = "";
             inputTemp = "";
@@ -93,26 +102,26 @@ namespace SHIV_Data_Weigh
                 int startCollect = listValueSylvac.Count();
                 string status = "N";
                 // Filter chênh lệch >0.05
-                while (index < listValueSylvac.Count() - 3)
+                while (index < listValueSylvac.Count() - 5)
                 {
-                    /// Nếu chênh lệnh >0.05 thì đang bắt đầu vào đo then => nhảy cách 3 giá trị rồi bắt đầu lấy dữ liệu 
-                    /// Nếu chênh lệch nhỏ hơn -0.05 thì bắt đầu vào rãnh => xóa 2 vị trí trước 
-                    if (((listValueSylvac[index] - listValueSylvac[index - 1]) >= 0.25)&&(listValueSylvac[index + 3] > 0.15))
+                    /// Nếu chênh lệnh >0.10 thì đang bắt đầu vào đo then => nhảy cách 3 giá trị rồi bắt đầu lấy dữ liệu    
+                    if (((listValueSylvac[index] - listValueSylvac[index - 1]) >= 0.050)&&(listValueSylvac[index + 5] > 0.15))
                     {
                         if (status != "U")
                         {
-                            startCollect = index + 3;
+                            startCollect = index + 5;
                             status = "U";
                         }
                     }
-                    if ((listValueSylvac[index] - listValueSylvac[index - 1]) <= -0.15)
+                    /// Nếu chênh lệch nhỏ hơn -0.10 thì bắt đầu vào rãnh => xóa 3 vị trí bắt đầu từ 2 vị trí trước 
+                    if ((listValueSylvac[index] - listValueSylvac[index - 1]) <= -0.050)
                     {
                         if (status != "D")
                         {
                             int lastIndex = listValueFilter.Count - 1;
-                            if (lastIndex > 1)
+                            if (lastIndex >= 2)
                             {
-                                listValueFilter.RemoveRange(lastIndex - 2, 2);
+                                listValueFilter.RemoveRange(lastIndex - 4,3);
                             }
                             else listValueFilter.Clear();
                             startCollect = listValueSylvac.Count();
@@ -123,26 +132,48 @@ namespace SHIV_Data_Weigh
                     index += 1;
                 }
                 // Return Final Value
+                Console.WriteLine("Read");
                 for (int i = 0; i < listValueSylvac.Count; i++)
                 {
                     Console.WriteLine(listValueSylvac[i]);
                 }
                 Console.WriteLine("----------------------");
-                Console.WriteLine("----------------------");
-                for (int i = 0; i < listValueFilter.Count; i++)
+                Console.WriteLine("Final");
+                if (listValueFilter.Count > 3)
                 {
-                    Console.WriteLine(listValueFilter[i]);
-                }
-                if (listValueFilter.Count > 5)
                     lbdFinalValue.FloatValue = listValueFilter.Max() - listValueFilter.Min();
-                else lbdFinalValue.FloatValue = -1;
+                    for (int i = 0; i < listValueFilter.Count(); i++)
+                    {
+                        Console.WriteLine(listValueFilter[i]);
+                    }
+                    //Console.WriteLine("--------------------MAX and MIN---------------CO RANH THEN------");
+                    //Console.WriteLine(listValueFilter.Max());
+                    //Console.WriteLine(listValueFilter.Min());
+                }
+                else
+                {
+                    if (listValueFilter.Count > 0 && listValueFilter.Count < 3)
+                    {
+                        lbdFinalValue.FloatValue = -1;
+                    }
+                    if (listValueFilter.Count == 0)
+                    {
+                        lbdFinalValue.FloatValue = listValueSylvac.Max() - listValueSylvac.Min();
+                        //Console.WriteLine("--------------------MAX and MIN---------------KHONG CO RANH THEN------");
+                        //Console.WriteLine(listValueSylvac.Max());
+                        //Console.WriteLine(listValueSylvac.Min());
+                    }
+                }
                 // Trả Event đầu ra
                 if (SylvacChangeValueEvent != null) SylvacChangeValueEvent(lbdFinalValue.FloatValue);
             }
         }
 
+        // Điều chỉnh 05/06 - Thêm giá trị 0 ở đầu để xử lý trường hợp không có then;
         public void Start()
         {
+            listValueSylvac.Clear();
+            listValueSylvac.Add(0);
             isRunning = true;
         }
 

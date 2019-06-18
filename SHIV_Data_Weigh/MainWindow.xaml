@@ -7,11 +7,18 @@
         xmlns:local="clr-namespace:SHIV_Data_Weigh"
         xmlns:w="clr-namespace:SHIV_Data_Weigh.Commands"
         Title="Demo - Lấy dữ liệu cân" Height="630" Width="850" WindowStartupLocation="CenterScreen" Closing="Window_Closing" Icon="cong_ty_co_phan_rtc_technology_viet_nam_596ed00091776_Cu1_icon.ico">
+    <Window.Resources>
+        <RoutedUICommand x:Key="MyCommandF1" Text="Text" />
+    </Window.Resources>
     <Window.CommandBindings>
         <CommandBinding Command="w:CustomCommands.Exit" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
         <CommandBinding Command="w:CustomCommands.StartSylvac" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
         <CommandBinding Command="w:CustomCommands.StopSylvac" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
+        <CommandBinding Command="{StaticResource MyCommandF1}" Executed="EventF1Push_Process"/>
     </Window.CommandBindings>
+    <Window.InputBindings>
+        <KeyBinding Key="Space" Command="{StaticResource MyCommandF1}" />
+    </Window.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="25"/>
@@ -32,6 +39,9 @@
                     <MenuItem Background="White" Header="Excel Settings"/>
                 </MenuItem>
                 <MenuItem Background="White" Header="About"/>
+                <MenuItem Background="White" Header="Change JobID"/>
+                <!--<MenuItem Background="White" Header="Start" PreviewMouseDown="MenuItemStart_PreviewMouseDown"/>
+                <MenuItem Background="White" Header="Stop" PreviewMouseDown="MenuItemStop_PreviewMouseDown"/>-->
             </Menu>
         </DockPanel>
         <Grid Grid.Row="1" Grid.ColumnSpan="2" Background="White">

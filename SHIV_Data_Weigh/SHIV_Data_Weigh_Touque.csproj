@@ -104,6 +104,12 @@
     </ApplicationDefinition>
     <Compile Include="Balance\BalanceObj.cs" />
     <Compile Include="Commands\CustomCommands.cs" />
+    <Compile Include="inputSTTSanpham.xaml.cs">
+      <DependentUpon>inputSTTSanpham.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LampWD.xaml.cs">
+      <DependentUpon>LampWD.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Object\SylvacObj.cs" />
     <Compile Include="Settings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -111,10 +117,19 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Sylvac\SylvacComObj.cs" />
+    <Compile Include="Sylvac\USRIOT.cs" />
     <Compile Include="Touque\TouqueData.cs" />
     <Compile Include="Touque\TouqueJobInfomation.cs" />
     <Compile Include="Touque\TouqueManager.cs" />
     <Compile Include="Touque\TouqueMObj.cs" />
+    <Page Include="inputSTTSanpham.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="LampWD.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

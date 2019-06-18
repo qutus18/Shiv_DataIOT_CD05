@@ -28,25 +28,42 @@ namespace SHIV_Data_Weigh
         private int countErrorCOM = 0;
         private bool messageShow;
         private float limitValue;
-
+        // khai bao doi tuong che do Manual
+        public float OldValueManual;
+        public float NewValueManual;
         // Khai báo Event
         public delegate void BalanceCalReturn(float Value);
         public event BalanceCalReturn BalanceChangeValueEvent;
         #endregion
-
+        public bool isManual;
+        Sylvac.USRIOT useUSRIOT = new Sylvac.USRIOT();
+        public BalanceObj(string COMPort, int numberValue, float limitWeigh) : this(COMPort, numberValue, limitWeigh, true)
+        {  }
         /// <summary>
         /// Khởi tạo đối tượng Cân mỡ
         /// </summary>
         /// <param name="COMPort">Tên cổng Com dạng string</param>
         /// <param name="numberValue">Số lượng phần tử của mảng trích mẫu giá trị cân</param>
         /// <param name="limitWeigh">Khoảng thay đổi trả ra lớn nhất của cân</param>
-        public BalanceObj(string COMPort, int numberValue, float limitWeigh)
+        public BalanceObj(string COMPort, int numberValue, float limitWeigh, bool isAuto)
         {
+            // Manual Mode
+            isManual = !isAuto;
+
             // Khai báo đối tượng cân
             string tempStringCOM = COMPort;
             COM_Kern = new SerialPort(tempStringCOM, 9600, Parity.None, 8, StopBits.One);
             COM_Kern.DataReceived += ProcessWeighData;
-            COM_Kern.Open();
+			Console.WriteLine(COM_Kern.ReadTimeout.ToString());
+			try
+			{
+				COM_Kern.Open();
+			}
+			catch(Exception e)
+			{
+				System.Windows.MessageBox.Show($"Lỗi kết nối cổng COM {tempStringCOM} - Mã lỗi: {e.ToString().Substring(0, 50)}");
+				App.Current.Shutdown();
+			}
             // Khai báo mảng lưu giá trị cân
             valueArr = new float[numberValue];
             // Khởi tạo giá trị cân tối đa
@@ -90,17 +107,38 @@ namespace SHIV_Data_Weigh
                 catch { wValue = (float)-9.999; }
                 LbdWeighRead.Weigh = wValue;
                 PushToArray(valueArr, wValue);
-                // Kiểm tra
-                var tempCheck = CheckDataStatus();
-                // Nếu trạng thái dữ liệu - Không có vật trên cân
-                if (tempCheck == 1)
+                if (!isManual)
                 {
-                    CalculateTakeOut(1);
+                    // Kiểm tra
+                    var tempCheck = CheckDataStatus();
+                    // Nếu trạng thái dữ liệu - Không có vật trên cân
+                    if (tempCheck == 1)
+                    {
+                        CalculateTakeOut(1);
+                    }
+                    // Nếu trạng thái dữ liệu - Vừa đặt vật vào cân
+                    if (tempCheck == 2)
+                    {
+                        CalculateTakeOut(2);
+                    }
                 }
-                // Nếu trạng thái dữ liệu - Vừa đặt vật vào cân
-                if (tempCheck == 2)
+                else
                 {
-                    CalculateTakeOut(2);
+                    // mode Manual
+                }
+            }
+        }
+        public void CalculateTakeOutManual()
+        {
+            if (isManual)
+            {
+                if (oldWeighValue > lowRangeValue) LbdWeighTakeOut.Weigh = -LbdWeighRead.Weigh + oldWeighValue;
+                oldWeighValue = LbdWeighRead.Weigh;
+                Console.WriteLine("Giá trị mới: " + oldWeighValue.ToString());
+                if (Math.Abs(LbdWeighTakeOut.Weigh) < limitValue)
+                {
+                    //App.Current.Dispatcher.Invoke(() => WriteToKeyBoard());
+                    if (BalanceChangeValueEvent != null) BalanceChangeValueEvent(LbdWeighTakeOut.Weigh);
                 }
             }
         }
@@ -191,29 +229,32 @@ namespace SHIV_Data_Weigh
         /// <param name="e"></param>
         private void CheckWeighValue(object sender, ElapsedEventArgs e)
         {
-            if (valueArr[(valueArr.Length - 1)] < lowRangeValue) countZero += 1;
-            else countZero = 0;
-            if (countZero > 1)
+            if (!isManual)
             {
-                countZero = 0;
-                for (int i = 0; i < valueArr.Length; i++)
+                if (valueArr[(valueArr.Length - 1)] < lowRangeValue) countZero += 1;
+                else countZero = 0;
+                if (countZero > 1)
                 {
-                    if (valueArr[i] > lowRangeValue) valueArr[i] = 0;
+                    countZero = 0;
+                    for (int i = 0; i < valueArr.Length; i++)
+                    {
+                        if (valueArr[i] > lowRangeValue) valueArr[i] = 0;
+                    }
+                    if ((blanceStatus == "None") || (blanceStatus == "High"))
+                    {
+                        blanceStatus = "Low";
+                        CalculateTakeOut(1); // Nếu cân Stable ở trạng thái 0 trong 2s, thì xử lý giống với vừa lấy vật ra
+                    }
                 }
-                if ((blanceStatus == "None") || (blanceStatus == "High"))
-                {
-                    blanceStatus = "Low";
-                    CalculateTakeOut(1); // Nếu cân Stable ở trạng thái 0 trong 2s, thì xử lý giống với vừa lấy vật ra
-                }
-            }
 
-            // Xử lý kiểm tra tín hiệu cổng COM
-            if ((countReceive == countReceiveOld) && (!messageShow))
-            {
-                //Console.WriteLine("count");
-                ErrorTimeOutCOM();
-                if (countReceive > 10000) countReceive = 0;
-                countReceiveOld = countReceive;
+                // Xử lý kiểm tra tín hiệu cổng COM
+                if ((countReceive == countReceiveOld) && (!messageShow))
+                {
+                    //Console.WriteLine("count");
+                    ErrorTimeOutCOM();
+                    if (countReceive > 10000) countReceive = 0;
+                    countReceiveOld = countReceive;
+                }
             }
         }
 

@@ -7,6 +7,7 @@ using System.Timers;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace SHIV_Data_Weigh
 {
@@ -18,9 +19,15 @@ namespace SHIV_Data_Weigh
         private BalanceObj Balance;
         private TouqueManager Touques;
         private SylvacComObj Sylvac;
+        private Sylvac.USRIOT UsrDevice = new Sylvac.USRIOT();
+        private bool isStart;
 
         public MainWindow()
         {
+			LampWD tempLamp = new LampWD();
+			tempLamp.Left = 0;
+			tempLamp.Top = 0;
+			tempLamp.Show();
             InitializeComponent();
             ExcelInitial();
             DataInitial();
@@ -48,12 +55,18 @@ namespace SHIV_Data_Weigh
         /// <param name="balanceValue"></param>
         private async void WriteToKeyBoard(float balanceValue)
         {
-            System.Windows.Clipboard.Clear();  // Always clear the clipboard first
-            string stringWrite = balanceValue.ToString("#.##");
-            System.Windows.Clipboard.SetText(stringWrite);
+            this.Dispatcher.Invoke(new Action(delegate
+            {
+                System.Windows.Clipboard.Clear();  // Always clear the clipboard first
+                string stringWrite = balanceValue.ToString("###.##");
+                System.Windows.Clipboard.SetText(stringWrite);
+            }));
             await Task.Delay(100);
-            System.Windows.Forms.SendKeys.SendWait("^v");  // Paste
-            //System.Windows.Forms.SendKeys.SendWait("{ENTER}");
+            this.Dispatcher.Invoke(new Action(delegate
+            {
+                System.Windows.Forms.SendKeys.SendWait("^v");
+                //System.Windows.Forms.SendKeys.SendWait("{ENTER}");
+            }));
             //Console.WriteLine("Confirm\n");
         }
 
@@ -66,6 +79,7 @@ namespace SHIV_Data_Weigh
             try
             {
                 Sylvac.Close();
+
             }
             catch
             { }
@@ -73,36 +87,92 @@ namespace SHIV_Data_Weigh
 
         private void DataInitial()
         {
-            //// Khai báo thiết bị cân mỡ
-            //string tempStringCOM = Settings.Default.ComPort;
-            //Balance = new BalanceObj(tempStringCOM, 15, 100);
-            //Balance.BalanceChangeValueEvent += ProcessBalanceValueReturn;
-            //// Hiển thị đối tượng cân mỡ
-            //lblWeighRead.DataContext = Balance.LbdWeighRead;
-            //lblWeighTakeOut.DataContext = Balance.LbdWeighTakeOut;
-            //// Khai báo thiết bị súng lực 
-            //Touques = new TouqueManager();
-            //Touques.EventReceiveDataComplete += ProcessTouquesListData;
-            //lvDataBinding.DataContext = Touques.ListDataTouque;
-            // Khai báo thiết bị Sylvac
-            Sylvac = new SylvacComObj("COM5");
-            lblSylvacInput.DataContext = Sylvac.lbdCurrentValue;
-            lblSylvacFinal.DataContext = Sylvac.lbdFinalValue;
-            //Sylvac.SylvacChangeValueEvent += ProcessSylvacEvent;
+            var useSylvac = Settings.Default.UseSylvac;
+            var comSylvac = Settings.Default.ComSylvac;
+            var useBalance = Settings.Default.UseBalance;
+            var useTouque = Settings.Default.UseTouque;
+            var comBalance = Settings.Default.ComPort;
+            // địa chỉ IP wifi kết nối
+            UsrDevice.Address = Settings.Default.USR424IP;
+            if (useBalance)
+            {
+                // Khai báo thiết bị cân mỡ
+                Balance = new BalanceObj(comBalance, 15, 100, false);
+                Balance.BalanceChangeValueEvent += ProcessBalanceValueReturn;
+                // Hiển thị đối tượng cân mỡ
+                lblWeighRead.DataContext = Balance.LbdWeighRead;
+                lblWeighTakeOut.DataContext = Balance.LbdWeighTakeOut;
+            }
+            if (useTouque)
+            {
+                // Khai báo thiết bị súng lực 
+                Touques = new TouqueManager();
+                Touques.EventReceiveDataComplete += ProcessTouquesListData;
+                lvDataBinding.DataContext = Touques.ListDataTouque;
+            }
+            if (useSylvac)
+            {
+                // Khai báo thiết bị Sylvac
+                Sylvac = new SylvacComObj("COM12");
+                Sylvac.SylvacChangeValueEvent += ProcessSylvacEvent;
+                lblSylvacInput.DataContext = Sylvac.lbdCurrentValue;
+                lblSylvacFinal.DataContext = Sylvac.lbdFinalValue;
+
+            }
+            //kết nối với USR-IO424T
+            //UsrDevice.ConnectTCP();
+            // Event Start and Stop value Sylvac
+            UsrDevice.OnchangeIOevent += UsrDeviceInputChangeProcess;
+
+        }
+
+        private void UsrDeviceInputChangeProcess(string info)
+        {
+            switch (info)
+            {
+                case "Input1":
+                    if (!isStart)
+                    {
+                        isStart = true;
+                        //lblSylvacInput.Foreground = Brushes.Red;
+                        Sylvac.Start();
+                    }
+                    break;
+                case "Input2":
+                    if (isStart)
+                    {
+                        isStart = false;
+                        //lblSylvacInput.Foreground = Brushes.Black;
+                        Sylvac.Stop();
+                    }
+                    else
+                    {
+                        if (Balance != null) Balance.CalculateTakeOutManual();
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
 
         private async void ProcessSylvacEvent(float Value)
         {
-            System.Windows.Clipboard.Clear();  // Always clear the clipboard first
-            string stringWrite = Value.ToString("#.##");
-            System.Windows.Clipboard.SetText(stringWrite);
+            this.Dispatcher.Invoke(new Action(delegate
+            {
+                System.Windows.Clipboard.Clear();  // Always clear the clipboard first
+                string stringWrite = (Value * 1000).ToString("###.##");
+                System.Windows.Clipboard.SetText(stringWrite);
+            }));
             await Task.Delay(100);
-            System.Windows.Forms.SendKeys.SendWait("^v");
+            this.Dispatcher.Invoke(new Action(delegate
+            {
+                System.Windows.Forms.SendKeys.SendWait("^v");
+            }));
         }
 
         private void ProcessBalanceValueReturn(float Value)
         {
-            WriteToKeyBoard(Value);
+            WriteToKeyBoard((float)Value);
         }
 
         private void ProcessTouquesListData(ObservableCollection<TouqueData> CurrentList)
@@ -136,7 +206,42 @@ namespace SHIV_Data_Weigh
                     break;
             }
         }
+
+        /// <summary>
+        /// Nút nhấn lấy dữ liệu cân bằng tay
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EventF1Push_Process(object sender, ExecutedRoutedEventArgs e)
+        {
+            Balance.CalculateTakeOutManual();
+        }
+
+        private void MenuItem_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        private void MenuItemStart_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (!isStart)
+            {
+                isStart = true;
+                //lblSylvacInput.Foreground = Brushes.Red;
+                Sylvac.Start();
+            }
+        }
+
+        private void MenuItemStop_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (isStart)
+            {
+                isStart = false;
+                //lblSylvacInput.Foreground = Brushes.Black;
+                Sylvac.Stop();
+            }
+        }
     }
 
-    
+
 }

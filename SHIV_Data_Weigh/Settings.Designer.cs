@@ -25,7 +25,7 @@ namespace SHIV_Data_Weigh {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("COM5")]
+        [global::System.Configuration.DefaultSettingValueAttribute("COM10")]
         public string ComPort {
             get {
                 return ((string)(this["ComPort"]));
@@ -37,7 +37,7 @@ namespace SHIV_Data_Weigh {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("192.168.5.158")]
+        [global::System.Configuration.DefaultSettingValueAttribute("127.0.0.1")]
         public string TouqueIP_001 {
             get {
                 return ((string)(this["TouqueIP_001"]));
@@ -49,7 +49,7 @@ namespace SHIV_Data_Weigh {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("192.168.5.159")]
+        [global::System.Configuration.DefaultSettingValueAttribute("192.168.5.158")]
         public string TouqueIP_002 {
             get {
                 return ((string)(this["TouqueIP_002"]));
@@ -85,7 +85,7 @@ namespace SHIV_Data_Weigh {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
         public int TouqueSelect {
             get {
                 return ((int)(this["TouqueSelect"]));
@@ -116,6 +116,66 @@ namespace SHIV_Data_Weigh {
             }
             set {
                 this["TouqueEnd"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("COM12")]
+        public string ComSylvac {
+            get {
+                return ((string)(this["ComSylvac"]));
+            }
+            set {
+                this["ComSylvac"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool UseBalance {
+            get {
+                return ((bool)(this["UseBalance"]));
+            }
+            set {
+                this["UseBalance"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UseTouque {
+            get {
+                return ((bool)(this["UseTouque"]));
+            }
+            set {
+                this["UseTouque"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UseSylvac {
+            get {
+                return ((bool)(this["UseSylvac"]));
+            }
+            set {
+                this["UseSylvac"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("192.168.10.1")]
+        public string USR424IP {
+            get {
+                return ((string)(this["USR424IP"]));
+            }
+            set {
+                this["USR424IP"] = value;
             }
         }
     }
